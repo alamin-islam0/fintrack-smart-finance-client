@@ -102,11 +102,16 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    if (health?.status !== 'ok') {
+      setOverview(null);
+      return;
+    }
+
     publicApi
       .overview(overviewPeriod)
       .then(({ data }) => setOverview(data))
       .catch(() => setOverview(null));
-  }, [overviewPeriod]);
+  }, [overviewPeriod, health?.status]);
 
   const metrics = useMemo(
     () => [

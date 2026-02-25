@@ -9,8 +9,8 @@ import { AuthUser } from '@/types';
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (payload: { name: string; email: string; photoUrl?: string; password: string }) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
+  register: (payload: { name: string; email: string; photoUrl?: string; password: string }) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -51,9 +51,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(data.user);
       toast.success('Welcome back');
       router.push(data.user.role === 'admin' ? '/admin' : '/dashboard');
+      return true;
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || 'Login failed');
-      throw error;
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || 'Login failed';
+      toast.error(status ? `${message} (HTTP ${status})` : message);
+      return false;
     }
   };
 
@@ -64,9 +67,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(data.user);
       toast.success('Account created');
       router.push(data.user.role === 'admin' ? '/admin' : '/dashboard');
+      return true;
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || 'Registration failed');
-      throw error;
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || 'Registration failed';
+      toast.error(status ? `${message} (HTTP ${status})` : message);
+      return false;
     }
   };
 
