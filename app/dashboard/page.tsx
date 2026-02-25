@@ -58,33 +58,44 @@ export default function DashboardPage() {
     total: item.total
   }));
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full" />
-          ))}
-        </section>
-        <Skeleton className="h-80 w-full" />
-      </div>
-    );
-  }
-
-  if (!summary) {
+  if (!loading && !summary) {
     return <EmptyState title="Dashboard unavailable" description="Unable to load dashboard metrics right now." />;
   }
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Total Balance" value={summary.balance} />
-        <StatCard title="Total Income" value={summary.totalIncome} tone="income" />
-        <StatCard title="Total Expense" value={summary.totalExpense} tone="expense" />
-        <StatCard title="Transactions" value={transactionCount} />
+        {loading || !summary ? (
+          Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 w-full" />)
+        ) : (
+          <>
+            <StatCard title="Total Balance" value={summary.balance} />
+            <StatCard title="Total Income" value={summary.totalIncome} tone="income" />
+            <StatCard title="Total Expense" value={summary.totalExpense} tone="expense" />
+            <StatCard title="Transactions" value={transactionCount} />
+          </>
+        )}
       </section>
 
-      {chartData.length ? (
+      {loading ? (
+        <>
+          <section className="grid gap-4 xl:grid-cols-3">
+            <div className="xl:col-span-2">
+              <Skeleton className="h-80 w-full" />
+            </div>
+            <Skeleton className="h-80 w-full" />
+          </section>
+          <section className="grid gap-4 xl:grid-cols-3">
+            <div className="xl:col-span-2">
+              <Skeleton className="h-80 w-full" />
+            </div>
+            <div className="space-y-3 xl:col-span-1">
+              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-64 w-full" />
+            </div>
+          </section>
+        </>
+      ) : chartData.length ? (
         <>
           <section className="grid gap-4 xl:grid-cols-3">
             <div className="xl:col-span-2">
