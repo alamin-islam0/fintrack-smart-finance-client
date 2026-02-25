@@ -35,6 +35,19 @@ export interface MonthlyTrend {
   total: number;
 }
 
+export interface CategoryBreakdown {
+  name: string;
+  value: number;
+}
+
+export interface DashboardDataResponse {
+  summary: TransactionSummary;
+  trends: MonthlyTrend[];
+  recentTransactions: Transaction[];
+  categoryBreakdown: CategoryBreakdown[];
+  transactionCount: number;
+}
+
 export const transactionApi = {
   all: (params?: {
     category?: string;
@@ -53,5 +66,7 @@ export const transactionApi = {
 
   summary: () => api.get<TransactionSummary>('/transactions/summary'),
 
-  trends: () => api.get<MonthlyTrend[]>('/transactions/trends')
+  trends: () => api.get<MonthlyTrend[]>('/transactions/trends'),
+
+  dashboard: (params?: { recentLimit?: number }) => api.get<DashboardDataResponse>('/transactions/dashboard', { params })
 };
