@@ -199,7 +199,7 @@ export default function HomePage() {
                   {user ? 'Open Dashboard' : 'Start Free'} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/dashboard">
+              <Link href={user ? dashboardHref : '/auth/login'}>
                 <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
                   Preview Experience
                 </Button>
