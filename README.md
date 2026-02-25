@@ -68,7 +68,9 @@ Ensure your code is pushed to a remote repository.
 
 1. Go to the Vercel Dashboard and click **New Project**.
 2. Select your repository.
-3. In the **Environment Variables** section, add `NEXT_PUBLIC_API_URL` with your production API URL.
+3. In the **Environment Variables** section, add:
+   - `NEXT_PUBLIC_API_URL` = `https://<your-backend-domain>/api`
+   - `NEXT_PUBLIC_APP_ENV` = `production`
 4. Click **Deploy**.
 
 ### 3. Build & Output Settings
@@ -78,6 +80,15 @@ The project uses standard Next.js build settings:
 - **Build Command**: `next build`
 - **Output Directory**: `.next`
 - **Install Command**: `npm install`
+
+The repository includes `vercel.json` for optimized static asset cache headers.
+
+## Performance Notes
+
+- AVIF/WebP image formats enabled in `next.config.mjs`
+- Compression enabled in production
+- Package import optimization enabled for `lucide-react`, `recharts`, `framer-motion`
+- Long-term immutable cache headers configured for static assets
 
 ## License
 

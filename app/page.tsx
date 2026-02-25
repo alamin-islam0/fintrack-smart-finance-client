@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { ArrowRight, ChevronDown, Moon, Sun } from 'lucide-react';
@@ -150,7 +151,13 @@ export default function HomePage() {
               <details className="group relative">
                 <summary className="flex cursor-pointer list-none items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-3 py-1.5">
                   {user.photoUrl ? (
-                    <img src={user.photoUrl} alt={user.name} className="h-8 w-8 rounded-full object-cover" />
+                    <Image
+                      src={user.photoUrl}
+                      alt={user.name}
+                      width={32}
+                      height={32}
+                      className="h-8 w-8 rounded-full object-cover"
+                    />
                   ) : (
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary text-xs font-semibold">
                       {user.name
