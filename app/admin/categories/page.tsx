@@ -103,24 +103,43 @@ export default function CategoriesPage() {
       {!categories.length ? (
         <EmptyState title="No categories" description="Create categories for income and expenses." />
       ) : (
-        <DataTable
-          columns={['Category', 'Type', 'Action']}
-          rows={categories}
-          renderRow={(item) => (
-            <>
-              <td className="px-4 py-3">{item.name}</td>
-              <td className="px-4 py-3 capitalize">{item.type}</td>
-              <td className="space-x-2 px-4 py-3">
-                <Button size="sm" variant="outline" onClick={() => openEdit(item)}>
-                  Edit
-                </Button>
-                <Button size="sm" variant="danger" onClick={() => remove(item._id)}>
-                  Delete
-                </Button>
-              </td>
-            </>
-          )}
-        />
+        <>
+          <div className="space-y-3 sm:hidden">
+            {categories.map((item) => (
+              <div key={item._id} className="rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                <p className="text-sm font-semibold">{item.name}</p>
+                <p className="mt-1 text-xs capitalize text-slate-500">{item.type}</p>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <Button size="sm" variant="outline" onClick={() => openEdit(item)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" variant="danger" onClick={() => remove(item._id)}>
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <DataTable
+            className="hidden sm:block"
+            columns={['Category', 'Type', 'Action']}
+            rows={categories}
+            renderRow={(item) => (
+              <>
+                <td className="px-4 py-3">{item.name}</td>
+                <td className="px-4 py-3 capitalize">{item.type}</td>
+                <td className="space-x-2 px-4 py-3">
+                  <Button size="sm" variant="outline" onClick={() => openEdit(item)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" variant="danger" onClick={() => remove(item._id)}>
+                    Delete
+                  </Button>
+                </td>
+              </>
+            )}
+          />
+        </>
       )}
 
       <Modal open={open} onClose={closeModal} title={editId ? 'Edit Category' : 'Add Category'}>

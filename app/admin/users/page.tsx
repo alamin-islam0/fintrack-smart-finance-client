@@ -58,30 +58,57 @@ export default function UsersPage() {
   }
 
   return (
-    <DataTable
-      columns={['Name', 'Email', 'Role', 'Created', 'Actions']}
-      rows={users}
-      renderRow={(row) => (
-        <>
-          <td className="px-4 py-3">{row.name}</td>
-          <td className="px-4 py-3">{row.email}</td>
-          <td className="px-4 py-3 capitalize">{row.role}</td>
-          <td className="px-4 py-3">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : '-'}</td>
-          <td className="space-x-2 px-4 py-3">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => updateRole(row._id, row.role === 'admin' ? 'user' : 'admin')}
-              disabled={row._id === user?._id}
-            >
-              Make {row.role === 'admin' ? 'User' : 'Admin'}
-            </Button>
-            <Button size="sm" variant="danger" onClick={() => removeUser(row._id)} disabled={row._id === user?._id}>
-              Delete
-            </Button>
-          </td>
-        </>
-      )}
-    />
+    <>
+      <div className="space-y-3 sm:hidden">
+        {users.map((row) => (
+          <div key={row._id} className="rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+            <p className="text-sm font-semibold">{row.name}</p>
+            <p className="mt-1 text-xs text-slate-500">{row.email}</p>
+            <p className="mt-1 text-xs capitalize text-slate-500">
+              {row.role} • {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : '-'}
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => updateRole(row._id, row.role === 'admin' ? 'user' : 'admin')}
+                disabled={row._id === user?._id}
+              >
+                Make {row.role === 'admin' ? 'User' : 'Admin'}
+              </Button>
+              <Button size="sm" variant="danger" onClick={() => removeUser(row._id)} disabled={row._id === user?._id}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <DataTable
+        className="hidden sm:block"
+        columns={['Name', 'Email', 'Role', 'Created', 'Actions']}
+        rows={users}
+        renderRow={(row) => (
+          <>
+            <td className="px-4 py-3">{row.name}</td>
+            <td className="px-4 py-3">{row.email}</td>
+            <td className="px-4 py-3 capitalize">{row.role}</td>
+            <td className="px-4 py-3">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : '-'}</td>
+            <td className="space-x-2 px-4 py-3">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => updateRole(row._id, row.role === 'admin' ? 'user' : 'admin')}
+                disabled={row._id === user?._id}
+              >
+                Make {row.role === 'admin' ? 'User' : 'Admin'}
+              </Button>
+              <Button size="sm" variant="danger" onClick={() => removeUser(row._id)} disabled={row._id === user?._id}>
+                Delete
+              </Button>
+            </td>
+          </>
+        )}
+      />
+    </>
   );
 }

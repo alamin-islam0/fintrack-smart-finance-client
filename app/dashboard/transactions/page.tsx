@@ -153,8 +153,8 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-2 md:grid-cols-7">
-        <Input placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} className="md:col-span-2" />
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-7">
+        <Input placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} className="sm:col-span-2 lg:col-span-2" />
         <select
           className="rounded-2xl border border-slate-200 px-3 dark:border-slate-700 dark:bg-slate-900"
           value={typeFilter}
@@ -178,7 +178,7 @@ export default function TransactionsPage() {
         </select>
         <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
         <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-        <Button onClick={handleSearch}>Apply</Button>
+        <Button onClick={handleSearch} className="w-full lg:w-auto">Apply</Button>
       </div>
 
       <div className="flex justify-end">
@@ -188,27 +188,51 @@ export default function TransactionsPage() {
       {!transactions.length ? (
         <EmptyState title="No transactions found" description="Adjust filters or add a new transaction to get started." />
       ) : (
-        <DataTable
-          columns={['Amount', 'Type', 'Category', 'Date', 'Note', 'Action']}
-          rows={transactions}
-          renderRow={(row) => (
-            <>
-              <td className="px-4 py-3">${row.amount.toFixed(2)}</td>
-              <td className="px-4 py-3 capitalize">{row.type}</td>
-              <td className="px-4 py-3">{row.category}</td>
-              <td className="px-4 py-3">{new Date(row.date).toLocaleDateString()}</td>
-              <td className="px-4 py-3 text-sm text-slate-500">{row.note || '-'}</td>
-              <td className="space-x-2 px-4 py-3">
-                <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
-                  Edit
-                </Button>
-                <Button size="sm" variant="danger" onClick={() => handleDelete(row._id)}>
-                  Delete
-                </Button>
-              </td>
-            </>
-          )}
-        />
+        <>
+          <div className="space-y-3 sm:hidden">
+            {transactions.map((row) => (
+              <div key={row._id} className="rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-semibold">${row.amount.toFixed(2)}</p>
+                  <p className="text-xs capitalize text-slate-500">{row.type}</p>
+                </div>
+                <p className="mt-1 text-sm font-medium">{row.category}</p>
+                <p className="mt-1 text-xs text-slate-500">{new Date(row.date).toLocaleDateString()}</p>
+                <p className="mt-2 text-xs text-slate-500">{row.note || 'No note'}</p>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" variant="danger" onClick={() => handleDelete(row._id)}>
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <DataTable
+            className="hidden sm:block"
+            columns={['Amount', 'Type', 'Category', 'Date', 'Note', 'Action']}
+            rows={transactions}
+            renderRow={(row) => (
+              <>
+                <td className="px-4 py-3">${row.amount.toFixed(2)}</td>
+                <td className="px-4 py-3 capitalize">{row.type}</td>
+                <td className="px-4 py-3">{row.category}</td>
+                <td className="px-4 py-3">{new Date(row.date).toLocaleDateString()}</td>
+                <td className="px-4 py-3 text-sm text-slate-500">{row.note || '-'}</td>
+                <td className="space-x-2 px-4 py-3">
+                  <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" variant="danger" onClick={() => handleDelete(row._id)}>
+                    Delete
+                  </Button>
+                </td>
+              </>
+            )}
+          />
+        </>
       )}
 
       <Modal open={open} onClose={closeModal} title={editingId ? 'Edit Transaction' : 'Add Transaction'}>

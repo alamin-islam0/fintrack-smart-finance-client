@@ -136,30 +136,58 @@ export default function BillsPage() {
       {!bills.length ? (
         <EmptyState title="No bills" description="Add recurring bills to track payments and due dates." />
       ) : (
-        <DataTable
-          columns={['Title', 'Amount', 'Due Date', 'Recurring', 'Status', 'Actions']}
-          rows={bills}
-          renderRow={(row) => (
-            <>
-              <td className="px-4 py-3">{row.title}</td>
-              <td className="px-4 py-3">${row.amount.toFixed(2)}</td>
-              <td className="px-4 py-3">{new Date(row.dueDate).toLocaleDateString()}</td>
-              <td className="px-4 py-3">{row.recurring ? 'Yes' : 'No'}</td>
-              <td className="px-4 py-3 capitalize">{row.status}</td>
-              <td className="space-x-2 px-4 py-3">
-                <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
-                  Edit
-                </Button>
-                <Button size="sm" onClick={() => markPaid(row)}>
-                  Mark {row.status === 'paid' ? 'Pending' : 'Paid'}
-                </Button>
-                <Button size="sm" variant="danger" onClick={() => remove(row._id)}>
+        <>
+          <div className="space-y-3 sm:hidden">
+            {bills.map((row) => (
+              <div key={row._id} className="rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-sm font-semibold">{row.title}</p>
+                  <p className="text-sm font-semibold">${row.amount.toFixed(2)}</p>
+                </div>
+                <p className="mt-1 text-xs text-slate-500">Due {new Date(row.dueDate).toLocaleDateString()}</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  {row.recurring ? 'Recurring' : 'One-time'} • <span className="capitalize">{row.status}</span>
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" onClick={() => markPaid(row)}>
+                    {row.status === 'paid' ? 'Set Pending' : 'Set Paid'}
+                  </Button>
+                </div>
+                <Button size="sm" variant="danger" onClick={() => remove(row._id)} className="mt-2 w-full">
                   Delete
                 </Button>
-              </td>
-            </>
-          )}
-        />
+              </div>
+            ))}
+          </div>
+          <DataTable
+            className="hidden sm:block"
+            columns={['Title', 'Amount', 'Due Date', 'Recurring', 'Status', 'Actions']}
+            rows={bills}
+            renderRow={(row) => (
+              <>
+                <td className="px-4 py-3">{row.title}</td>
+                <td className="px-4 py-3">${row.amount.toFixed(2)}</td>
+                <td className="px-4 py-3">{new Date(row.dueDate).toLocaleDateString()}</td>
+                <td className="px-4 py-3">{row.recurring ? 'Yes' : 'No'}</td>
+                <td className="px-4 py-3 capitalize">{row.status}</td>
+                <td className="space-x-2 px-4 py-3">
+                  <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" onClick={() => markPaid(row)}>
+                    Mark {row.status === 'paid' ? 'Pending' : 'Paid'}
+                  </Button>
+                  <Button size="sm" variant="danger" onClick={() => remove(row._id)}>
+                    Delete
+                  </Button>
+                </td>
+              </>
+            )}
+          />
+        </>
       )}
 
       <Modal open={open} onClose={closeModal} title={editId ? 'Edit Bill' : 'Add Bill'}>

@@ -63,7 +63,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 sm:space-y-6">
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {loading || !summary ? (
           Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 w-full" />)
@@ -109,20 +109,35 @@ export default function DashboardPage() {
               <MonthlyTrendChart data={chartData} />
             </div>
             <div className="xl:col-span-1">
-              <h3 className="mb-3 text-lg font-semibold">Recent Transactions</h3>
+              <h3 className="mb-3 text-base font-semibold sm:text-lg">Recent Transactions</h3>
               {transactions.length ? (
-                <DataTable
-                  columns={['Type', 'Category', 'Amount', 'Date']}
-                  rows={transactions}
-                  renderRow={(row) => (
-                    <>
-                      <td className="px-4 py-3 capitalize">{row.type}</td>
-                      <td className="px-4 py-3">{row.category}</td>
-                      <td className="px-4 py-3">${row.amount.toFixed(2)}</td>
-                      <td className="px-4 py-3">{new Date(row.date).toLocaleDateString()}</td>
-                    </>
-                  )}
-                />
+                <>
+                  <div className="space-y-2 sm:hidden">
+                    {transactions.map((row) => (
+                      <div key={row._id} className="rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium capitalize">{row.type}</p>
+                          <p className="text-sm font-semibold">${row.amount.toFixed(2)}</p>
+                        </div>
+                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{row.category}</p>
+                        <p className="mt-1 text-xs text-slate-500">{new Date(row.date).toLocaleDateString()}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <DataTable
+                    className="hidden sm:block"
+                    columns={['Type', 'Category', 'Amount', 'Date']}
+                    rows={transactions}
+                    renderRow={(row) => (
+                      <>
+                        <td className="px-4 py-3 capitalize">{row.type}</td>
+                        <td className="px-4 py-3">{row.category}</td>
+                        <td className="px-4 py-3">${row.amount.toFixed(2)}</td>
+                        <td className="px-4 py-3">{new Date(row.date).toLocaleDateString()}</td>
+                      </>
+                    )}
+                  />
+                </>
               ) : (
                 <EmptyState title="No transactions" description="Add your first transaction to populate dashboard activity." />
               )}

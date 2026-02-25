@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const userLinks = [
@@ -21,7 +22,7 @@ const adminLinks = [
   { href: '/admin/reports', label: 'Reports' }
 ];
 
-export function Sidebar({ role, open }: { role: 'user' | 'admin'; open: boolean }) {
+export function Sidebar({ role, open, onClose }: { role: 'user' | 'admin'; open: boolean; onClose: () => void }) {
   const pathname = usePathname();
   const links = role === 'admin' ? adminLinks : userLinks;
 
@@ -32,14 +33,20 @@ export function Sidebar({ role, open }: { role: 'user' | 'admin'; open: boolean 
         open ? 'translate-x-0' : '-translate-x-full'
       )}
     >
-      <Link href="/" className="mb-8 block text-xl font-bold tracking-tight text-brand-primary">
-        FinTrack
-      </Link>
+      <div className="mb-6 flex items-center justify-between">
+        <Link href="/" className="text-xl font-bold tracking-tight text-brand-primary" onClick={onClose}>
+          FinTrack
+        </Link>
+        <button onClick={onClose} className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden" aria-label="Close menu">
+          <X className="h-5 w-5" />
+        </button>
+      </div>
       <nav className="space-y-2">
         {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
+            onClick={onClose}
             className={cn(
               'block rounded-xl px-3 py-2 text-sm font-medium transition',
               pathname === link.href
